@@ -1,0 +1,873 @@
+/**
+ * App.css — Penuel Empire · Unified App Shell
+ * =============================================================================
+ *
+ * CONSOLIDATION MAP:
+ *   § 1   CSS VARIABLES & PHOENIX DEEP DARK TOKENS
+ *   § 2   GLOBAL RESET & BASE
+ *   § 3   TYPOGRAPHY
+ *   § 4   BUTTONS & FORMS
+ *   § 5   CARDS & UTILITIES
+ *   § 6   SCROLLBAR
+ *   § 7   ANIMATIONS & ACCESSIBILITY
+ *   § 8   NAVBAR — Phoenix Glass
+ *           Desktop: sticky translucent bar
+ *           Mobile: hamburger + full-screen glass overlay (backdrop-filter:blur(20px))
+ *           Aura-sync: .navbar--empire / .navbar--plaza / .navbar--stopover
+ *   § 9   GLOBAL AURA CONTROLLER (FloatingSwitcher)
+ *           Desktop: vertically-centred pill, right:1.5rem
+ *           Mobile ≤640px: full-width bottom bar, safe-area aware
+ *   § 10  PAGE BOTTOM GUARD — prevents floater overlapping content on mobile
+ *   § 11  ABOUT PAGE SWITCHER
+ *   § 12  HOME PAGE HELPERS
+ *   § 13  RESPONSIVE BREAKPOINTS
+ *
+ * Colour palette:
+ *   Empire   → #ffae42 → #ff4500  (fiery orange-amber)
+ *   Plaza    → #d4af37 → #c9a026  (luxury gold)
+ *   Stopover → #0074d9 → #00c6ff  (electric blue)
+ *
+ * Background: #1e1e1e STRICTLY — no cream, no off-white.
+ * =============================================================================
+ */
+
+
+/* ============================================================================
+   § 1  CSS VARIABLES & PHOENIX DEEP DARK TOKENS
+   ============================================================================ */
+
+:root {
+  /* Legacy tokens kept for backwards-compat with older pages */
+  --primary-color:   #0a0a0a;
+  --secondary-color: #d4af37;
+  --accent-color:    #111111;
+  --text-color:      #ffffff;
+  --text-muted:      #a0a0a0;
+  --accent-light:    #e8d9a7;
+  --border-accent:   #d4af37;
+  --card-shadow:     rgba(0,0,0,0.3);
+  --serif-font:      'Cormorant Garamond', Georgia, serif;
+  --sans-serif-font: 'DM Sans', system-ui, sans-serif;
+
+  /* Phoenix Deep Dark tokens — shared with Catalogue.css */
+  --bg:         #1e1e1e;
+  --bg-alt:     #181818;
+  --surface:    #252526;
+  --surface-2:  #2d2d2d;
+  --border:     rgba(255,255,255,0.07);
+  --border-mid: rgba(255,255,255,0.14);
+  --text:       #ffffff;
+  --muted:      #c0a080;
+  --muted-2:    #6e6e6e;
+  --grad-a:     #ffae42;
+  --grad-b:     #ff4500;
+  --accent:     #ffae42;
+  --glow:       rgba(255,174,66,0.15);
+  --glow-hot:   rgba(255,69,0,0.28);
+  --btn-fg:     #0a0a0a;
+
+  --f-display: 'Cormorant Garamond', Georgia, serif;
+  --f-body:    'DM Sans', system-ui, sans-serif;
+  --morph:     all 0.65s cubic-bezier(0.4,0,0.2,1);
+
+  /* Spacing */
+  --spacing-xs:  0.25rem;
+  --spacing-sm:  0.5rem;
+  --spacing-md:  1rem;
+  --spacing-lg:  1.5rem;
+  --spacing-xl:  2rem;
+  --spacing-2xl: 3rem;
+  --spacing-3xl: 4rem;
+
+  /* Transitions */
+  --transition-fast:   0.2s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow:   0.5s ease;
+
+  /* Z-index layers */
+  --z-dropdown: 100;
+  --z-sticky:   200;
+  --z-fixed:    300;
+  --z-floater:  400;
+  --z-overlay:  500;
+  --z-modal:    1000;
+}
+
+/* ── Theme overrides applied by BusinessContext ────────────────────────── */
+body.theme-plaza {
+  --bg:#1a1a1a; --bg-alt:#141414; --surface:#222222; --surface-2:#2a2a2a;
+  --border:rgba(212,175,55,0.10); --border-mid:rgba(212,175,55,0.22);
+  --muted:#9e8a5a; --grad-a:#d4af37; --grad-b:#c9a026; --accent:#d4af37;
+  --glow:rgba(212,175,55,0.12); --glow-hot:rgba(212,175,55,0.25); --btn-fg:#0a0a0a;
+  --secondary-color:#d4af37; --border-accent:#d4af37;
+}
+body.theme-stopover {
+  --bg:#0a192f; --bg-alt:#071525; --surface:#112240; --surface-2:#172f54;
+  --border:rgba(0,116,217,0.14); --border-mid:rgba(0,116,217,0.28);
+  --muted:#7ab3d4; --grad-a:#0074d9; --grad-b:#00c6ff; --accent:#0074d9;
+  --glow:rgba(0,116,217,0.14); --glow-hot:rgba(0,198,255,0.25); --btn-fg:#001a33;
+  --secondary-color:#0074d9; --border-accent:#0074d9;
+}
+
+/* Gradient text utility (shared with Catalogue.css) */
+.gradient-text {
+  background: linear-gradient(135deg, var(--grad-a) 0%, var(--grad-b) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; display: inline-block; transition: var(--morph);
+}
+.accent--empire   { --grad-a:#ffae42; --grad-b:#ff4500; }
+.accent--plaza    { --grad-a:#d4af37; --grad-b:#c9a026; }
+.accent--stopover { --grad-a:#0074d9; --grad-b:#00c6ff; }
+
+/* ============================================================================
+   § 2  GLOBAL RESET & BASE
+   ============================================================================ */
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+
+html { scroll-behavior:smooth; font-size:16px; }
+
+body {
+  font-family: var(--f-body);
+  background-color: var(--bg);
+  color: var(--text-color);
+  line-height: 1.6;
+  overflow-x: hidden;
+  letter-spacing: 0.3px;
+  scroll-padding-top: 80px;
+  transition: background-color var(--transition-slow), color var(--transition-slow);
+}
+
+.app {
+  min-height: 100vh;
+  background: var(--bg);
+  transition: background var(--transition-slow);
+}
+
+/* ============================================================================
+   § 3  TYPOGRAPHY
+   ============================================================================ */
+
+h1,h2,h3,h4,h5,h6 {
+  font-family: var(--serif-font);
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: var(--spacing-md);
+  letter-spacing: -0.5px;
+  color: var(--text-color);
+  transition: color var(--transition-slow);
+}
+h1 { font-size: clamp(2rem,8vw,4rem); }
+h2 { font-size: clamp(1.75rem,5vw,3rem); }
+h3 { font-size: clamp(1.25rem,3vw,1.75rem); }
+h4 { font-size: 1.25rem; }
+h5 { font-size: 1.1rem; }
+h6 { font-size: 1rem; }
+
+p {
+  margin-bottom: var(--spacing-md);
+  color: var(--text-color);
+  font-weight: 400;
+  line-height: 1.7;
+  transition: color var(--transition-slow);
+}
+
+a {
+  color: var(--secondary-color);
+  text-decoration: none;
+  transition: color var(--transition-slow), text-shadow var(--transition-normal);
+}
+a:hover { text-shadow: 0 0 8px var(--secondary-color); }
+
+strong,b { font-weight: 600; color: var(--secondary-color); }
+em,i     { font-style: italic; color: var(--text-muted); }
+
+/* ============================================================================
+   § 4  BUTTONS & FORMS
+   ============================================================================ */
+
+button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+.btn {
+  font-family: var(--sans-serif-font);
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  transition: all var(--transition-normal);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 12px 28px;
+}
+button:hover,
+input[type="button"]:hover,
+.btn:hover { transform: translateY(-2px); }
+button:active,
+input[type="button"]:active,
+.btn:active { transform: translateY(0); }
+
+input,textarea,select {
+  font-family: var(--sans-serif-font);
+  color: var(--text-color);
+  background-color: var(--primary-color);
+  border: 1px solid var(--border-accent);
+  border-radius: 4px;
+  padding: var(--spacing-sm) var(--spacing-md);
+  transition: border-color var(--transition-normal), box-shadow var(--transition-normal);
+}
+input:focus,textarea:focus,select:focus {
+  outline: none;
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 8px rgba(212,175,55,0.15);
+}
+
+/* ============================================================================
+   § 5  CARDS & UTILITIES
+   ============================================================================ */
+
+.service-card,.card {
+  background: var(--primary-color);
+  border: 1px solid var(--border-accent);
+  border-radius: 8px;
+  padding: var(--spacing-lg);
+  box-shadow: 0 4px 20px var(--card-shadow);
+  transition: all var(--transition-slow);
+}
+.service-card:hover,.card:hover {
+  border-color: var(--secondary-color);
+  box-shadow: 0 8px 30px var(--card-shadow);
+  transform: translateY(-4px);
+}
+
+.container { max-width:1200px; margin:0 auto; padding:0 var(--spacing-lg); }
+.text-center    { text-align: center; }
+.text-muted     { color: var(--text-muted); }
+.text-secondary { color: var(--secondary-color); }
+.hidden  { display: none !important; }
+.visible { display: block !important; }
+
+/* ============================================================================
+   § 6  SCROLLBAR
+   ============================================================================ */
+
+::-webkit-scrollbar       { width:10px; height:10px; }
+::-webkit-scrollbar-track { background: var(--accent-color); }
+::-webkit-scrollbar-thumb { background:var(--border-accent); border-radius:5px; transition:background var(--transition-slow); }
+::-webkit-scrollbar-thumb:hover { background: var(--secondary-color); }
+* { scrollbar-color:var(--border-accent) var(--accent-color); scrollbar-width:thin; }
+
+/* ============================================================================
+   § 7  ANIMATIONS & ACCESSIBILITY
+   ============================================================================ */
+
+@keyframes fadeIn  { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeOut { from{opacity:1;transform:translateY(0)} to{opacity:0;transform:translateY(-10px)} }
+@keyframes slideIn { from{transform:translateX(-100%)} to{transform:translateX(0)} }
+@keyframes slideOut{ from{transform:translateX(0)} to{transform:translateX(100%)} }
+
+@media (prefers-reduced-motion: reduce) {
+  *,*::before,*::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+@media (prefers-contrast: more) {
+  :root { --text-muted:#606060; }
+  button,a { text-decoration: underline; }
+  .service-card,.card { border-width: 2px; }
+}
+
+/* ============================================================================
+   § 8  NAVBAR — Phoenix Glass
+   ============================================================================
+   HTML structure (built in App.jsx):
+     <header.navbar.navbar--{branch}>
+       <div.navbar__inner>
+         <a.navbar__brand>
+         <nav.navbar__links>      ← desktop only
+         <button.navbar__burger>  ← mobile only
+       </div>
+       <div.mobile-menu>          ← full-screen glass overlay
+         <div.mobile-menu__noise>
+         <nav.mobile-menu__nav>
+         <div.mobile-menu__switcher>
+         <p.mobile-menu__tagline>
+       </div>
+     </header>
+   ============================================================================ */
+
+/* ── Bar ── */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  background: linear-gradient(180deg, rgba(10,10,10,0.96) 0%, rgba(10,10,10,0.88) 100%);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  transition: border-color var(--transition-slow);
+}
+
+/* Aura-sync: accent border per branch */
+.navbar--empire   { border-bottom-color: rgba(255,174,66,0.35); }
+.navbar--plaza    { border-bottom-color: rgba(212,175,55,0.35); }
+.navbar--stopover { border-bottom-color: rgba(0,116,217,0.35);  }
+
+.navbar__inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+/* ── Wordmark ── */
+.navbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  color: #fff;
+  flex-shrink: 0;
+}
+.navbar__brand:hover { text-shadow: none; }
+.navbar__brand-icon {
+  font-size: 1.4rem;
+  line-height: 1;
+  transition: transform 0.3s ease;
+}
+.navbar__brand:hover .navbar__brand-icon { transform: scale(1.15) rotate(-5deg); }
+.navbar__brand-text {
+  font-family: var(--f-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: #fff;
+}
+.navbar__brand-text em {
+  font-style: normal;
+  background: linear-gradient(135deg, var(--grad-a), var(--grad-b));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transition: var(--morph);
+}
+
+/* ── Desktop links ── */
+.navbar__links {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.navbar__link {
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-family: var(--f-body);
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.62);
+  text-decoration: none;
+  letter-spacing: 0.2px;
+  transition: color 0.25s, background 0.25s;
+}
+.navbar__link:hover {
+  color: #fff;
+  background: rgba(255,255,255,0.06);
+  text-shadow: none;
+}
+/* Active link colour per branch */
+.navbar--empire   .navbar__link--active { color: #ffae42; }
+.navbar--plaza    .navbar__link--active { color: #d4af37; }
+.navbar--stopover .navbar__link--active { color: #00c6ff; }
+.navbar__link--active {
+  font-weight: 600;
+  background: rgba(255,255,255,0.05);
+}
+
+/* CTA pill */
+.navbar__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 0.75rem;
+  padding: 9px 20px;
+  border-radius: 8px;
+  font-family: var(--f-body);
+  font-size: 0.83rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--btn-fg);
+  background: linear-gradient(135deg, var(--grad-a), var(--grad-b));
+  box-shadow: 0 4px 18px var(--glow-hot);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: var(--morph);
+}
+.navbar__cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px var(--glow-hot);
+  text-shadow: none;
+  color: var(--btn-fg);
+}
+
+/* ── Hamburger (mobile only, shown via media query) ── */
+.navbar__burger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
+  color: #fff;
+  cursor: pointer;
+  padding: 0;
+  text-transform: none;
+  letter-spacing: 0;
+  transition: background 0.25s, border-color 0.25s;
+  flex-shrink: 0;
+}
+.navbar__burger:hover { background: rgba(255,255,255,0.12); transform: none; }
+
+/* ── Phoenix Glass Overlay ── */
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  background: rgba(8,8,8,0.85);
+  backdrop-filter: blur(20px) saturate(200%);
+  -webkit-backdrop-filter: blur(20px) saturate(200%);
+  /* hidden state */
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-10px);
+  transition: opacity 0.38s cubic-bezier(0.4,0,0.2,1),
+              transform 0.38s cubic-bezier(0.4,0,0.2,1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem;
+  padding: 2rem;
+  padding-top: 80px;    /* clear the sticky navbar */
+}
+.mobile-menu--open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+.mobile-menu__noise {
+  position: absolute;
+  inset: 0;
+  opacity: 0.022;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px;
+  pointer-events: none;
+}
+
+/* Nav links inside overlay */
+.mobile-menu__nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  width: 100%;
+  max-width: 360px;
+}
+.mobile-menu__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1rem 1.4rem;
+  border-radius: 12px;
+  font-family: var(--f-display);
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.70);
+  text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.03);
+  /* staggered entrance — controlled by --i CSS var */
+  opacity: 0;
+  transform: translateX(-18px);
+  transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+  transition-delay: calc(0.04s + var(--i, 0) * 0.07s);
+}
+.mobile-menu--open .mobile-menu__link {
+  opacity: 1;
+  transform: translateX(0);
+}
+.mobile-menu__link:hover {
+  background: rgba(255,255,255,0.07);
+  color: #fff;
+  transform: translateX(5px);
+  text-shadow: none;
+}
+
+/* Aura-sync: active link colour in overlay */
+.navbar--empire   .mobile-menu__link--active { color:#ffae42; border-color:rgba(255,174,66,0.30); background:rgba(255,174,66,0.06); }
+.navbar--plaza    .mobile-menu__link--active { color:#d4af37; border-color:rgba(212,175,55,0.30); background:rgba(212,175,55,0.06); }
+.navbar--stopover .mobile-menu__link--active { color:#00c6ff; border-color:rgba(0,198,255,0.30);  background:rgba(0,198,255,0.06);  }
+
+.mobile-menu__chevron {
+  opacity: 0.45;
+  flex-shrink: 0;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.mobile-menu__link:hover .mobile-menu__chevron { opacity: 1; transform: translateX(4px); }
+.mobile-menu__link--active .mobile-menu__chevron { opacity: 1; }
+
+/* CTA link inside overlay */
+.mobile-menu__cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 360px;
+  padding: 1rem 1.4rem;
+  border-radius: 12px;
+  margin-top: 0.3rem;
+  font-family: var(--f-body);
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--btn-fg);
+  background: linear-gradient(135deg, var(--grad-a), var(--grad-b));
+  box-shadow: 0 6px 24px var(--glow-hot);
+  text-decoration: none;
+  opacity: 0;
+  transform: translateX(-18px);
+  transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+  transition-delay: calc(0.04s + var(--i, 3) * 0.07s);
+}
+.mobile-menu--open .mobile-menu__cta {
+  opacity: 1;
+  transform: translateX(0);
+}
+.mobile-menu__cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 32px var(--glow-hot);
+  color: var(--btn-fg);
+  text-shadow: none;
+}
+
+/* Branch switcher row inside overlay */
+.mobile-menu__switcher {
+  display: flex;
+  gap: 0.5rem;
+  max-width: 360px;
+  width: 100%;
+  margin-top: 0.3rem;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: all 0.35s ease;
+  transition-delay: 0.30s;
+}
+.mobile-menu--open .mobile-menu__switcher {
+  opacity: 1;
+  transform: translateY(0);
+}
+.mob-sw-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 8px;
+  border-radius: 10px;
+  font-family: var(--f-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  border: 1.5px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.50);
+  transition: all 0.25s ease;
+}
+.mob-sw-btn:hover { background: rgba(255,255,255,0.09); color: #fff; transform: none; }
+.mob-sw-btn--empire.is-active   { background:linear-gradient(135deg,#ffae42,#ff4500); color:#0a0a0a; border-color:transparent; box-shadow:0 4px 16px rgba(255,69,0,0.40); }
+.mob-sw-btn--plaza.is-active    { background:linear-gradient(135deg,#d4af37,#c9a026); color:#0a0a0a; border-color:transparent; box-shadow:0 4px 16px rgba(212,175,55,0.36); }
+.mob-sw-btn--stopover.is-active { background:linear-gradient(135deg,#0074d9,#00c6ff); color:#001a33; border-color:transparent; box-shadow:0 4px 16px rgba(0,116,217,0.42); }
+
+.mobile-menu__tagline {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.26);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 0.3rem;
+  opacity: 0;
+  transition: opacity 0.35s ease 0.38s;
+}
+.mobile-menu--open .mobile-menu__tagline { opacity: 1; }
+
+/* ============================================================================
+   § 9  GLOBAL AURA CONTROLLER (FloatingSwitcher)
+   ============================================================================
+   Moved from Catalogue.css.
+   Desktop  → fixed pill, right:1.5rem, vertically centred (top:50% → translateY(-50%))
+   Mobile   → full-width bottom bar, safe-area-inset-bottom aware
+   ============================================================================ */
+
+.floater {
+  position: fixed;
+  right: 1.5rem;
+  top: 50%;
+  /* offset down while invisible so the snap feels natural */
+  transform: translateY(calc(-50% + 20px));
+  z-index: var(--z-floater);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.55rem;
+  background: rgba(16,16,16,0.84);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 20px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.55),
+              inset 0 1px 0 rgba(255,255,255,0.05);
+  /* hidden */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+/* Snap into centred position when visible */
+.floater--visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(-50%);
+}
+
+.floater__btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 16px;
+  border-radius: 14px;
+  font-family: var(--f-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  background: transparent;
+  color: rgba(255,255,255,0.44);
+  transition: all 0.26s cubic-bezier(0.4,0,0.2,1);
+  min-width: 44px;
+  min-height: 44px;
+  white-space: nowrap;
+  /* override global button base */
+  padding: 11px 16px;
+  text-transform: uppercase;
+}
+.floater__btn:hover { background: rgba(255,255,255,0.08); color: #fff; transform: none; }
+
+/* Active states per branch */
+.floater__btn--empire.is-active {
+  background: linear-gradient(135deg,#ffae42,#ff4500);
+  color: #0a0a0a;
+  box-shadow: 0 4px 18px rgba(255,69,0,0.45);
+}
+.floater__btn--plaza.is-active {
+  background: linear-gradient(135deg,#d4af37,#c9a026);
+  color: #0a0a0a;
+  box-shadow: 0 4px 18px rgba(212,175,55,0.40);
+}
+.floater__btn--stopover.is-active {
+  background: linear-gradient(135deg,#0074d9,#00c6ff);
+  color: #001a33;
+  box-shadow: 0 4px 18px rgba(0,116,217,0.45);
+}
+
+.floater__label { font-size: 0.76rem; }
+
+/* ============================================================================
+   § 10  PAGE BOTTOM GUARD
+   ============================================================================
+   On mobile the floater becomes a full-width bottom bar 58px tall.
+   Catalogue and ProductDetail need padding-bottom so the bar doesn't
+   overlay the last content card or CTA button.
+   ============================================================================ */
+
+@media (max-width: 640px) {
+  .catalogue,
+  .pd {
+    padding-bottom: 90px;
+  }
+}
+
+/* ============================================================================
+   § 11  ABOUT PAGE SWITCHER
+   ============================================================================ */
+
+.about-switcher-section {
+  padding: 3rem 2rem;
+  background: linear-gradient(180deg, var(--primary-color) 0%, var(--accent-color) 100%);
+  border-bottom: 1px solid var(--border-accent);
+  transition: all var(--transition-slow);
+}
+.about-switcher {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.switcher-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: color var(--transition-slow);
+}
+.switcher-buttons {
+  display: flex;
+  gap: 1rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border-accent);
+  border-radius: 50px;
+  padding: 6px;
+  backdrop-filter: blur(5px);
+  transition: all var(--transition-slow);
+}
+.switcher-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 40px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all var(--transition-normal);
+  font-family: var(--sans-serif-font);
+}
+.switcher-btn:hover { color: var(--secondary-color); transform: none; }
+.switcher-btn.active {
+  background: var(--secondary-color);
+  color: var(--primary-color);
+  box-shadow: 0 4px 15px rgba(212,175,55,0.3);
+}
+.switcher-btn svg { transition: transform var(--transition-normal); }
+.switcher-btn:hover svg { transform: scale(1.1); }
+.switcher-btn.active svg { transform: scale(1.15); }
+
+/* ============================================================================
+   § 12  HOME PAGE HELPERS
+   ============================================================================ */
+
+.hero-cta-group,.hero-content-box,.home-section-content { background: transparent !important; }
+.hero-cta-group p,.hero-content-box p { background: transparent; padding: 0; border: none; }
+
+.hero-cta,.cta-button,.primary-cta {
+  border-left: 3px solid var(--secondary-color);
+  padding-left: 16px;
+  transition: all var(--transition-slow);
+}
+.hero-cta:hover,.cta-button:hover,.primary-cta:hover {
+  border-left-color: var(--secondary-color);
+  transform: translateX(4px);
+}
+.text-container,.content-box {
+  background: rgba(255,255,255,0.02);
+  border-left: 3px solid var(--border-accent);
+  padding-left: 1.5rem;
+  transition: all var(--transition-slow);
+}
+.text-container:hover,.content-box:hover {
+  background: rgba(255,255,255,0.04);
+  border-left-color: var(--secondary-color);
+}
+
+/* ============================================================================
+   § 13  RESPONSIVE BREAKPOINTS
+   ============================================================================ */
+
+@media (max-width: 1024px) {
+  :root { font-size: 15px; }
+  body  { scroll-padding-top: 70px; }
+}
+
+@media (max-width: 768px) {
+  :root { font-size: 14px; }
+  body  { scroll-padding-top: 60px; }
+
+  /* Show hamburger, hide desktop links */
+  .navbar__links  { display: none; }
+  .navbar__burger { display: flex; }
+
+  .navbar__inner { height: 60px; padding: 0 1.25rem; }
+
+  .service-card,.card { padding: var(--spacing-md); }
+
+  .about-switcher    { flex-direction: column; gap: 1.5rem; }
+  .switcher-label    { width: 100%; text-align: center; }
+  .switcher-buttons  { width: 100%; justify-content: center; }
+  .switcher-btn      { flex: 1; justify-content: center; }
+}
+
+@media (max-width: 640px) {
+  :root { font-size: 13px; }
+  body  { scroll-padding-top: 56px; }
+  button { padding: 10px 20px; font-size: 0.85rem; }
+
+  /* ── Floater → full-width bottom bar ── */
+  .floater {
+    right: 0;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    flex-direction: row;
+    border-radius: 16px 16px 0 0;
+    padding: 0.5rem 1rem;
+    padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
+    border: none;
+    border-top: 1px solid rgba(255,255,255,0.09);
+    /* hidden: slide off the bottom */
+    transform: translateY(100%);
+  }
+  .floater--visible {
+    /* visible: slide up flush to bottom */
+    transform: translateY(0);
+  }
+  .floater__btn {
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    padding: 10px 8px;
+    border-radius: 10px;
+    font-size: 0.65rem;
+    min-height: 58px;
+  }
+  .floater__label { font-size: 0.62rem; }
+}
+
+@media (max-width: 480px) {
+  :root { font-size: 13px; }
+  body  { scroll-padding-top: 56px; }
+}

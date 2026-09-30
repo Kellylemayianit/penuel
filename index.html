@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="plaza">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -12,13 +12,19 @@
 <title>Penuel Empire Portal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script>try{document.documentElement.dataset.theme=localStorage.getItem('penuel_branch')||'plaza'}catch(e){}</script>
-<link rel="stylesheet" href="assets/css/app.css">
-<link rel="stylesheet" href="assets/css/catalogue.css">
-<link rel="stylesheet" href="assets/css/management.css">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/App.css">
+<link rel="stylesheet" href="assets/css/Home.css">
+<link rel="stylesheet" href="assets/css/About.css">
+<link rel="stylesheet" href="assets/css/Catalogue.css">
+<link rel="stylesheet" href="assets/css/ProductDetail.css">
+<link rel="stylesheet" href="assets/css/Login.css">
+<link rel="stylesheet" href="assets/css/Dashboard.css">
+<link rel="stylesheet" href="assets/css/DashboardHome.css">
+<link rel="stylesheet" href="assets/css/extra.css">
 </head>
 <body>
+<script>try{document.body.className='theme-'+(localStorage.getItem('penuel_branch')||'empire')}catch(e){document.body.className='theme-empire'}</script>
 <div id="nav-root"></div>
 <main id="app-root"></main>
 <div id="modal-root"></div>

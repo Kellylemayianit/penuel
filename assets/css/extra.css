@@ -1,0 +1,19 @@
+/* Small additions for the vanilla build (order rows, item hero, sold-out cards, dashboard bits) */
+body{padding:0}
+.scard--out{opacity:.5;pointer-events:none}
+.pd--plaza .pd-hero{background:linear-gradient(135deg,#3a2f12,#1e1e1e)}
+.pd--stopover .pd-hero{background:linear-gradient(135deg,#0a3560,#0a192f)}
+.pd-hero__title{margin:0}
+.dash-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.dash-row:last-child{border:0}
+.dash-row .grow{flex:1;min-width:160px}
+.dash-row small{color:var(--text-muted)}
+.pill{font-size:.72rem;padding:3px 10px;border-radius:999px;border:1px solid var(--secondary-color);color:var(--secondary-color);margin-left:6px}
+.btn-lite{background:var(--secondary-color);color:#0a0a0a;border:0;border-radius:6px;padding:8px 14px;font-weight:600}
+.btn-lite.ghost{background:transparent;color:var(--text-color);border:1px solid rgba(255,255,255,.2)}
+.bar{display:grid;grid-template-columns:100px 1fr auto;gap:10px;align-items:center;font-size:.9rem;margin:8px 0}
+.bar i{display:block;height:10px;border-radius:99px;background:var(--secondary-color)}
+.login-footer a{color:var(--secondary-color)}
+.dashboard-content-split{grid-template-columns:minmax(0,7fr) minmax(0,3fr)}
+.metrics-grid{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+@media (max-width:768px){.dashboard-content-split{grid-template-columns:1fr}}

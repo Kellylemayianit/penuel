@@ -1,0 +1,474 @@
+/**
+ * DashboardHome.css - Additional Styles for Smart Dashboard
+ * 
+ * Add these styles to the bottom of your Dashboard.css
+ * They complement the existing .dashboard-main, .dashboard-card styles
+ * and provide styling for the home page components
+ */
+
+/* ============================================================================
+   METRICS GRID - Top Row with 4 Pulse Cards
+   ============================================================================ */
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* ============================================================================
+   PULSE CARD - Individual Metric Cards
+   ============================================================================ */
+
+.pulse-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--secondary-color);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.pulse-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--secondary-color), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.pulse-card:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--secondary-color);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+.pulse-card:hover::before {
+  opacity: 1;
+}
+
+/* Pulse Card Icon */
+.pulse-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.pulse-card:hover .pulse-card-icon {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Pulse Card Content */
+.pulse-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.pulse-card-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.pulse-card-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin: 0;
+  font-family: 'Courier New', monospace;
+}
+
+.pulse-card-change {
+  font-size: 0.85rem;
+  color: var(--secondary-color);
+  margin: 0;
+  font-weight: 600;
+  transition: color 0.5s ease;
+}
+
+/* ============================================================================
+   CONTENT SPLIT LAYOUT - Performance Overview (70%) + Activity Feed (30%)
+   ============================================================================ */
+
+.dashboard-content-split {
+  display: grid;
+  grid-template-columns: 70% 30%;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.performance-section {
+  grid-column: 1;
+}
+
+.activity-section {
+  grid-column: 2;
+}
+
+/* ============================================================================
+   PERFORMANCE OVERVIEW - Left Section
+   ============================================================================ */
+
+.performance-overview {
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--secondary-color);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.performance-overview:hover {
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.performance-title {
+  font-family: var(--serif-font);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0 0 1.5rem;
+  letter-spacing: -0.5px;
+  transition: color 0.5s ease;
+}
+
+.performance-chart-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 2px dashed var(--secondary-color);
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.performance-chart-placeholder p {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin: 0.5rem 0;
+  line-height: 1.6;
+}
+
+.placeholder-note {
+  font-size: 0.8rem !important;
+  color: var(--text-muted);
+  opacity: 0.6;
+  font-style: italic;
+}
+
+/* ============================================================================
+   ACTIVITY FEED - Right Section
+   ============================================================================ */
+
+.activity-feed {
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--secondary-color);
+  border-radius: 8px;
+  height: fit-content;
+  transition: all 0.3s ease;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.activity-feed:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.activity-feed-title {
+  font-family: var(--serif-font);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0 0 1rem;
+  letter-spacing: -0.5px;
+}
+
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* ============================================================================
+   ACTIVITY ITEM - Individual Activity Feed Items
+   ============================================================================ */
+
+.activity-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.activity-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--secondary-color);
+}
+
+.activity-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.activity-item:hover .activity-icon {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.activity-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.activity-message {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-color);
+  margin: 0;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.activity-timestamp {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin: 0;
+  opacity: 0.7;
+}
+
+/* ============================================================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================================================ */
+
+@media (max-width: 1200px) {
+  .dashboard-content-split {
+    grid-template-columns: 65% 35%;
+  }
+
+  .metrics-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+}
+
+@media (max-width: 1024px) {
+  .dashboard-content-split {
+    grid-template-columns: 60% 40%;
+    gap: 1rem;
+  }
+
+  .performance-overview {
+    padding: 1.5rem;
+  }
+
+  .performance-chart-placeholder {
+    min-height: 250px;
+    padding: 1.5rem;
+  }
+
+  .pulse-card {
+    padding: 1rem;
+    gap: 0.75rem;
+  }
+
+  .pulse-card-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .pulse-card-value {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-content-split {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .performance-section {
+    grid-column: 1;
+  }
+
+  .activity-section {
+    grid-column: 1;
+  }
+
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .pulse-card {
+    padding: 1rem;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .pulse-card-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .pulse-card-label {
+    font-size: 0.75rem;
+  }
+
+  .pulse-card-value {
+    font-size: 1.25rem;
+  }
+
+  .performance-chart-placeholder {
+    min-height: 250px;
+  }
+
+  .activity-feed {
+    max-height: 350px;
+  }
+}
+
+@media (max-width: 480px) {
+  .metrics-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .dashboard-page-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .dashboard-page-title h1 {
+    font-size: 1.5rem;
+  }
+
+  .pulse-card {
+    padding: 0.75rem;
+  }
+
+  .pulse-card-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .pulse-card-value {
+    font-size: 1rem;
+  }
+
+  .performance-title,
+  .activity-feed-title {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .performance-overview,
+  .activity-feed {
+    padding: 1rem;
+  }
+
+  .performance-chart-placeholder {
+    min-height: 200px;
+    padding: 1rem;
+  }
+
+  .activity-item {
+    padding: 0.5rem;
+    gap: 0.5rem;
+  }
+
+  .activity-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .activity-message {
+    font-size: 0.8rem;
+  }
+
+  .activity-timestamp {
+    font-size: 0.7rem;
+  }
+}
+
+/* ============================================================================
+   SCROLLBAR STYLING FOR ACTIVITY FEED
+   ============================================================================ */
+
+.activity-feed::-webkit-scrollbar {
+  width: 6px;
+}
+
+.activity-feed::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 3px;
+}
+
+.activity-feed::-webkit-scrollbar-thumb {
+  background: var(--secondary-color);
+  border-radius: 3px;
+}
+
+.activity-feed::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary-color);
+  opacity: 0.8;
+}
+
+/* ============================================================================
+   ACCESSIBILITY
+   ============================================================================ */
+
+.pulse-card:focus-visible,
+.activity-item:focus-visible {
+  outline: 2px solid var(--secondary-color);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse-card,
+  .performance-overview,
+  .activity-feed,
+  .activity-item {
+    transition: none !important;
+  }
+}

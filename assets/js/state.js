@@ -5,14 +5,14 @@ export const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;'
 export const money = (n, cur = 'KES') => cur === 'USD' ? '$' + Number(n).toLocaleString('en-US') : 'KES ' + Number(n).toLocaleString('en-KE');
 
 export const state = {
-  activeBranch: get('penuel_branch') || 'plaza',
+  activeBranch: get('penuel_branch') || 'empire', // 'empire' | 'plaza' | 'stopover'
   userRole: get('penuel_role') || 'public', // 'public' | 'staff' | 'ceo'
   userDept: get('penuel_dept') || 'all',
 
   setBranch(branch) {
     this.activeBranch = branch.toLowerCase();
     put('penuel_branch', this.activeBranch);
-    document.documentElement.setAttribute('data-theme', this.activeBranch);
+    document.body.className = 'theme-' + this.activeBranch;
     window.dispatchEvent(new CustomEvent('aura-sync', { detail: { branch: this.activeBranch } }));
   },
   setAuth(role, dept = 'all') {
@@ -43,4 +43,10 @@ export const state = {
     i < 0 ? s.push(id) : s.splice(i, 1);
     put('penuel_oos', JSON.stringify(s)); this.addLog(`${id} ${i < 0 ? 'marked out of stock' : 'back in stock'}`); this._emit();
   }
+};
+
+export const BRAND = {
+  empire: { icon: '🔥', name: 'Empire', tag: 'One portal, two properties', loc: 'Amboseli, Kenya' },
+  plaza: { icon: '🏛️', name: 'Plaza', tag: 'Luxury hotel and safari experiences', loc: 'Amboseli National Park region' },
+  stopover: { icon: '⛽', name: 'Stopover', tag: '24/7 retail, dining and auto services', loc: 'Highway rest stop, Amboseli corridor' }
 };
