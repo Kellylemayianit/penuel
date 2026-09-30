@@ -1,0 +1,8 @@
+.track{margin:32px 0}
+.track h2{margin-bottom:12px;font-size:1.3rem}
+.scroller{display:flex;gap:14px;overflow-x:auto;padding:4px 2px 14px;scroll-snap-type:x proximity}
+.card{flex:0 0 240px;scroll-snap-align:start;background:var(--bg-surface);border:1px solid var(--border-color);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:8px;text-align:left;transition:transform var(--transition-speed),box-shadow var(--transition-speed)}
+.card:hover:not(:disabled){transform:translateY(-3px);box-shadow:0 10px 28px var(--accent-glow)}
+.card .icon{font-size:1.8rem}
+.card .price{font-weight:700;color:var(--accent-color);margin-top:auto}
+.card:disabled{opacity:.55;cursor:not-allowed}
