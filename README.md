@@ -1,7 +1,7 @@
-# Penuel Empire Portal
-Zero-dependency vanilla JS SPA. ES modules need a server (not file://):
-    python3 -m http.server 8000   # then open http://localhost:8000
-Routes: /#/  /#/catalogue  /#/management
-Demo logins (client-side only, replace before launch): staff PIN 1234, CEO PIN 0000.
-Payments: DEMO_MODE in assets/js/api/client.js simulates STK Push; set it false once the Cloudflare Worker at WORKER_URL is live.
-Orders, stock and activity logs persist in localStorage for the demo; move them to the Worker/database for multi-device use.
+# Penuel Empire Portal (vanilla JS)
+Same portal as the React/Vite version, with no build step. Hash routing means any static host works with no rewrite rules.
+    python3 -m http.server 8000   # ES modules need a server, then open http://localhost:8000
+Routes: /#/  /#/about  /#/catalogue  /#/gate  /#/dashboard
+Data: assets/js/data/plaza.js and stopover.js are your existing JSON, unchanged.
+Before launch: set DEMO_MODE=false in assets/js/api/client.js and implement /api/login and /api/stkpush in the Cloudflare Worker.
+Plaza prices are USD in the data (currency says KES); KES_PER_USD in client.js sets the M-Pesa charge.

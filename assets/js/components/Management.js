@@ -1,16 +1,12 @@
 import { state, esc, money } from '../state.js';
-import { dataFor } from './Catalogue.js';
-import { openLogin } from './Modal.js';
+import { normalise } from './Catalogue.js';
 
 const NEXT = { new: ['accepted', 'Accept'], accepted: ['done', 'Mark fulfilled'] };
 const fmt = ts => new Date(ts).toLocaleString('en-KE', { dateStyle: 'short', timeStyle: 'short' });
 
-export function renderManagement() {
+export function renderDashboard() {
+  if (state.userRole === 'public') { location.hash = '#/gate'; return }
   const root = document.getElementById('app-root');
-  if (state.userRole === 'public') {
-    root.innerHTML = `<div class="wrap hero"><h1 style="font-size:2rem">Management</h1><p>Sign in with your staff or owner account to see orders and reports.</p><button class="btn" id="li">Staff login</button></div>`;
-    document.getElementById('li').onclick = openLogin; return;
-  }
   root.innerHTML = `<div class="wrap">${state.userRole === 'ceo' ? ceo() : staff()}</div>`;
   root.querySelectorAll('[data-act]').forEach(b => b.onclick = () => state.setStatus(b.dataset.id, b.dataset.act));
   root.querySelectorAll('[data-stock]').forEach(b => b.onclick = () => state.toggleStock(b.dataset.stock));
@@ -25,13 +21,13 @@ function orderRow(o) {
 
 function staff() {
   const d = state.userDept, oos = state.outOfStock();
-  const mine = state.orders().filter(o => o.branch === state.activeBranch && (d === 'all' || o.dept === d));
+  const mine = state.orders().filter(o => d === 'all' || o.dept === d);
   const open = mine.filter(o => o.status !== 'done'), done = mine.filter(o => o.status === 'done');
-  const items = dataFor(state.activeBranch).tracks.flatMap(t => t.items).filter(i => d === 'all' || i.dept === d);
-  return `<div class="hero" style="padding-bottom:0"><h1 style="font-size:2rem">${esc(d)} queue</h1><p class="muted">Showing ${esc(state.activeBranch)} orders. Use the branch button to switch.</p></div>
+  const items = normalise(state.activeBranch).flatMap(t => t.items).filter(i => i.dept === d);
+  return `<div class="hero" style="padding-bottom:0"><h1 style="font-size:2rem">${esc(d)} queue</h1><p class="muted">Orders for your department across both branches.</p></div>
     <div class="panel"><h3>Open orders (${open.length})</h3>${open.map(orderRow).join('') || '<p class="muted">No open orders. New payments appear here.</p>'}</div>
-    <div class="panel"><h3>Stock</h3>${items.map(i => `<div class="order"><span class="grow">${esc(i.name)}</span>
-      <button class="btn ghost" data-stock="${esc(i.id)}">${oos.includes(i.id) ? 'Back in stock' : 'Mark out of stock'}</button></div>`).join('') || '<p class="muted">No items in this department for this branch.</p>'}</div>
+    <div class="panel"><h3>Stock (${esc(state.activeBranch)})</h3>${items.map(i => `<div class="order"><span class="grow">${esc(i.name)}</span>
+      <button class="btn ghost" data-stock="${esc(i.id)}">${oos.includes(i.id) ? 'Back in stock' : 'Mark out of stock'}</button></div>`).join('') || '<p class="muted">No items for this department on the active branch. Use Switch to change branch.</p>'}</div>
     <div class="panel"><h3>Fulfilled (${done.length})</h3>${done.slice(0, 10).map(orderRow).join('') || '<p class="muted">Nothing fulfilled yet.</p>'}</div>`;
 }
 

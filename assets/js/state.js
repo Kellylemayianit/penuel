@@ -2,13 +2,12 @@ const get = k => { try { return localStorage.getItem(k) } catch { return null } 
 const put = (k, v) => { try { localStorage.setItem(k, v) } catch {} };
 const load = (k, d) => { try { return JSON.parse(get(k)) ?? d } catch { return d } };
 export const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-export const money = n => 'KES ' + Number(n).toLocaleString('en-KE');
+export const money = (n, cur = 'KES') => cur === 'USD' ? '$' + Number(n).toLocaleString('en-US') : 'KES ' + Number(n).toLocaleString('en-KE');
 
 export const state = {
   activeBranch: get('penuel_branch') || 'plaza',
   userRole: get('penuel_role') || 'public', // 'public' | 'staff' | 'ceo'
   userDept: get('penuel_dept') || 'all',
-  cart: [],
 
   setBranch(branch) {
     this.activeBranch = branch.toLowerCase();
@@ -22,7 +21,7 @@ export const state = {
     window.dispatchEvent(new CustomEvent('auth-changed', { detail: { role, dept } }));
   },
 
-  // Demo persistence (localStorage). Swap for Worker/database calls in production.
+  // Demo persistence (localStorage). Replace with Worker + database calls for multi-device use.
   orders: () => load('penuel_orders', []),
   outOfStock: () => load('penuel_oos', []),
   log: () => load('penuel_log', []),
